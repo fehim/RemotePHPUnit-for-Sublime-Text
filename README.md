@@ -1,6 +1,9 @@
 Simple PHPUnit commands
 ===============
 
+*forked to be able to run tests within vagrant box*
+
+
 This plugin allows you the run the PHPUnit tests using the Sublime Text interface, without having to open and use the command line.
 
 ### Available commands:

@@ -1,13 +1,27 @@
 [
     {
-        "caption": "PHPUnit: Run",
+        "caption": "PHPUnit: Run all",
         "command": "simple_php_unit"
     },
     {
-        "caption": "PHPUnit: Run with params",
+        "caption": "PHPUnit: Run unit tests",
         "command": "simple_php_unit",
         "args": {
-            "params": true
+            "type": "unit"
+        }
+    },
+    {
+        "caption": "PHPUnit: Run functional tests",
+        "command": "simple_php_unit",
+        "args": {
+            "type": "functional"
+        }
+    },
+    {
+        "caption": "PHPUnit: Run tests in current file",
+        "command": "simple_php_unit",
+        "args": {
+            "type": "current_file"
         }
     }
 ]

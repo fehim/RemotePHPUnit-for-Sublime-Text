@@ -25,42 +25,57 @@ class ShowInPanel:
 class SimplePhpUnitCommand(sublime_plugin.WindowCommand):
     def __init__(self, *args, **kwargs):
         super(SimplePhpUnitCommand, self).__init__(*args, **kwargs)
-        settings = sublime.load_settings('SimplePHPUnit.sublime-settings')
-        self.phpunit_path = settings.get('phpunit_path')
+        self.settings = sublime.load_settings('SimplePHPUnit.sublime-settings')
+        self.phpunit_path = self.settings.get('phpunit_path')
+        self.phpunit_xml_path = self.settings.get('phpunit_xml_path')
 
     def run(self, *args, **kwargs):
         try:
             # The first folder needs to be the Laravel Project
-            self.PROJECT_PATH = self.window.folders()[0]
-            if os.path.isfile("%s" % os.path.join(self.PROJECT_PATH, 'phpunit.xml')) or os.path.isfile("%s" % os.path.join(self.PROJECT_PATH, 'phpunit.xml.dist')):
+            self.PROJECT_PATH = self.window.folders()[0] + "/"
+
+            if self.phpunit_xml_path:
+                self.CONFIG_PATH = self.PROJECT_PATH + self.phpunit_xml_path
+            else:
+                self.CONFIG_PATH = self.PROJECT_PATH
+
+            if os.path.isfile("%s" % os.path.join(self.CONFIG_PATH, 'phpunit.xml')) or os.path.isfile("%s" % os.path.join(self.CONFIG_PATH, 'phpunit.xml.dist')):
                 self.params = kwargs.get('params', False)
-                self.args = [self.phpunit_path, '--stderr']
-                if self.params is True:
-                    self.window.show_input_panel('Params:', '', self.on_params, None, None)
-                else:
-                    self.on_done()
+                self.type = kwargs.get('type', False)
+                self.group = ""
+                self.filename = ""
+
+                if self.type == "unit":
+                    self.group = " --exclude-group functional_test"
+                elif self.type == "functional":
+                    self.group = " --group functional_test"
+                elif self.type == "current_file":
+                    self.filename = self.file_name()
+                    if not os.path.isfile(self.filename):
+                        sublime.status_message("file " + self.filename + " not found")
+                        return False
+                    else:
+                        self.filename = self.filename[len(self.PROJECT_PATH):]
+
+                self.on_done()
             else:
                 sublime.status_message("phpunit.xml or phpunit.xml.dist not found")
         except IndexError:
             sublime.status_message("Please open a project with PHPUnit")
 
-    def on_params(self, command):
-        self.command = command
-        self.args.extend(shlex.split(str(self.command)))
-        self.on_done()
+    def file_name(self):
+        return self.window.active_view().file_name()
 
     def on_done(self):
-        if os.name != 'posix':
-            self.args = subprocess.list2cmdline(self.args)
         try:
-            self.run_shell_command(self.args, self.PROJECT_PATH)
+            self.run_shell_command(self.PROJECT_PATH)
         except IOError:
             sublime.status_message('IOError - command aborted')
 
-    def run_shell_command(self, command, working_dir):
+    def run_shell_command(self, working_dir):
             self.window.run_command("exec", {
-                "cmd": command,
-                "shell": False,
+                "cmd": "ssh -i app/vagrant_key vagrant@172.84.98.23 'cd /vagrant; phpunit" + self.group + " -c /vagrant/app " + self.filename + "'",
+                "shell": True,
                 "working_dir": working_dir
             })
             self.display_results()

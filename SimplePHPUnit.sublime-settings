@@ -1,3 +1,4 @@
 {
-	"phpunit_path": "phpunit"
+	"phpunit_path": "phpunit",
+    "phpunit_xml_path": "app/"
 }
