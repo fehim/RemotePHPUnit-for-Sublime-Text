@@ -6,10 +6,10 @@ import sublime
 import sublime_plugin
 
 if sys.version_info < (3, 3):
-    raise RuntimeError('SimplePHPUnit works with Sublime Text 3 only')
+    raise RuntimeError('RemotePHPUnit works with Sublime Text 3 only')
 
-SPU_THEME = 'Packages/SimplePHPUnit/SimplePHPUnit.hidden-tmTheme'
-SPU_SYNTAX = 'Packages/SimplePHPUnit/SimplePHPUnit.hidden-tmLanguage'
+SPU_THEME = 'Packages/RemotePHPUnit/RemotePHPUnit.hidden-tmTheme'
+SPU_SYNTAX = 'Packages/RemotePHPUnit/RemotePHPUnit.hidden-tmLanguage'
 
 class ShowInPanel:
     def __init__(self, window):
@@ -22,10 +22,10 @@ class ShowInPanel:
         self.panel.settings().set("color_scheme", SPU_THEME)
         self.panel.set_syntax_file(SPU_SYNTAX)
 
-class SimplePhpUnitCommand(sublime_plugin.WindowCommand):
+class RemotePhpUnitCommand(sublime_plugin.WindowCommand):
     def __init__(self, *args, **kwargs):
-        super(SimplePhpUnitCommand, self).__init__(*args, **kwargs)
-        self.settings = sublime.load_settings('SimplePHPUnit.sublime-settings')
+        super(RemotePhpUnitCommand, self).__init__(*args, **kwargs)
+        self.settings = sublime.load_settings('RemotePHPUnit.sublime-settings')
         self.phpunit_path = self.settings.get('phpunit_path')
         self.phpunit_xml_path = self.settings.get('phpunit_xml_path')
 

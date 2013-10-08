@@ -1,25 +1,25 @@
 [
     {
-        "caption": "PHPUnit: Run all",
-        "command": "simple_php_unit"
+        "caption": "Remote PHPUnit: Run all",
+        "command": "remote_php_unit"
     },
     {
-        "caption": "PHPUnit: Run unit tests",
-        "command": "simple_php_unit",
+        "caption": "Remote PHPUnit: Run unit tests",
+        "command": "remote_php_unit",
         "args": {
             "type": "unit"
         }
     },
     {
-        "caption": "PHPUnit: Run functional tests",
-        "command": "simple_php_unit",
+        "caption": "Remote PHPUnit: Run functional tests",
+        "command": "remote_php_unit",
         "args": {
             "type": "functional"
         }
     },
     {
-        "caption": "PHPUnit: Run tests in current file",
-        "command": "simple_php_unit",
+        "caption": "Remote PHPUnit: Run tests in current file",
+        "command": "remote_php_unit",
         "args": {
             "type": "current_file"
         }

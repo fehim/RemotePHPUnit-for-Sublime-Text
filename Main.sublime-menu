@@ -5,9 +5,9 @@
         "children":
         [
             {
-                "caption": "PHPUnit...",
+                "caption": "Remote PHPUnit",
                 "command": "show_overlay",
-                "args": {"overlay": "command_palette", "text": "PHPUnit: " }
+                "args": {"overlay": "command_palette", "text": "Remote PHPUnit: " }
             }
         ]
     },
@@ -24,17 +24,17 @@
                 "children":
                 [
                     {
-                        "caption": "SimplePHPUnit",
+                        "caption": "RemotePHPUnit",
                         "children":
                         [
                             {
                                 "command": "open_file",
-                                "args": {"file": "${packages}/SimplePHPUnit/SimplePHPUnit.sublime-settings"},
+                                "args": {"file": "${packages}/RemotePHPUnit/RemotePHPUnit.sublime-settings"},
                                 "caption": "Settings – Default"
                             },
                             {
                                 "command": "open_file",
-                                "args": {"file": "${packages}/User/SimplePHPUnit.sublime-settings"},
+                                "args": {"file": "${packages}/User/RemotePHPUnit.sublime-settings"},
                                 "caption": "Settings – User"
                             }
                         ]
