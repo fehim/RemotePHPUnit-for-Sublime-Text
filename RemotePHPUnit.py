@@ -34,10 +34,10 @@ class RemotePhpUnitCommand(sublime_plugin.WindowCommand):
         self.phpunit_xml_path = self.settings.get('phpunit_xml_path')
 
         if (str(self.phpunit_path) == ""):
-            raise RuntimeError('You have to set the phpunit_path in the RemotePHPUnit configuration')
+            sublime.status_message("You have to set the phpunit_path in the RemotePHPUnit configuration")
 
         if (str(self.server_address) == ""):
-            raise RuntimeError('You have to set the server_address in the RemotePHPUnit configuration')
+            sublime.status_message("You have to set the server_address in the RemotePHPUnit configuration")
 
     def run(self, *args, **kwargs):
         try:
