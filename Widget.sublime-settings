@@ -1,4 +1,4 @@
 {
-  "syntax": "Packages/RemotePHPUnit/RemotePHPUnit.hidden-tmLanguage",
-  "color_scheme": "Packages/RemotePHPUnit/RemotePHPUnit.hidden-tmTheme"
+	"syntax": "Packages/RemotePHPUnit/RemotePHPUnit.hidden-tmLanguage",
+ 	"color_scheme": "Packages/RemotePHPUnit/RemotePHPUnit.hidden-tmTheme"
 }
