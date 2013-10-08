@@ -25,9 +25,19 @@ class ShowInPanel:
 class RemotePhpUnitCommand(sublime_plugin.WindowCommand):
     def __init__(self, *args, **kwargs):
         super(RemotePhpUnitCommand, self).__init__(*args, **kwargs)
-        self.settings = sublime.load_settings('RemotePHPUnit.sublime-settings')
-        self.phpunit_path = self.settings.get('phpunit_path')
+        self.settings         = sublime.load_settings('RemotePHPUnit.sublime-settings')
+        self.phpunit_path     = self.settings.get('phpunit_path')
+        self.root_folder      = self.settings.get('root_folder')
+        self.ssh_key          = self.settings.get('ssh_key')
+        self.server_user      = self.settings.get('server_user')
+        self.server_address   = self.settings.get('server_address')
         self.phpunit_xml_path = self.settings.get('phpunit_xml_path')
+
+        if (str(self.phpunit_path) == ""):
+            raise RuntimeError('You have to set the phpunit_path in the RemotePHPUnit configuration')
+
+        if (str(self.server_address) == ""):
+            raise RuntimeError('You have to set the server_address in the RemotePHPUnit configuration')
 
     def run(self, *args, **kwargs):
         try:
@@ -74,12 +84,46 @@ class RemotePhpUnitCommand(sublime_plugin.WindowCommand):
 
     def run_shell_command(self, working_dir):
             self.window.run_command("exec", {
-                "cmd": "ssh -i app/vagrant_key vagrant@172.84.98.23 'cd /vagrant; phpunit" + self.group + " -c /vagrant/app " + self.filename + "'",
+                "cmd": self.build_command(),
                 "shell": True,
                 "working_dir": working_dir
             })
             self.display_results()
             return True
+
+    def build_command(self):
+        command = "ssh "
+
+        # add ssh key if configured
+        if (self.ssh_key):
+            command += " -i " + self.ssh_key + " "
+
+        # add server user if configured
+        if (self.server_user):
+            command += self.server_user + "@"
+
+        # add server address
+        command += self.server_address
+
+        command += " '"
+
+        if (self.root_folder):
+            command += "cd /" + self.root_folder + "; "
+
+        # set the php_unit path and group
+        command += self.phpunit_path + self.group
+
+        # set the xml configuration path if configured
+        if (self.phpunit_xml_path):
+            command += " -c " + self.phpunit_xml_path
+
+        # set file name if set
+        if (self.filename):
+            command += " " + self.filename
+
+        command += "'"
+
+        return command;
 
     def display_results(self):
         display = ShowInPanel(self.window)
