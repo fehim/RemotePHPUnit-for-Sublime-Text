@@ -48,4 +48,4 @@ Press Cmd + Shift + P for the dropdown command list, search for `Remote PHPUnit:
 ### Notes:
 - You need insert in Sublime Text user settings `"show_panel_on_build": true` or use `Tools/Build Results/Show Build Results` menu item for view results.
 
-Special thanks to @evgeny-golubev and @paza
+Special thanks to [@evgeny-golubev](https://www.github.com/evgeny-golubev) and [@paza](https://www.github.com/paza)
