@@ -1,6 +1,6 @@
 {
 	"phpunit_path": "/usr/bin/phpunit",
-    "phpunit_xml_path": "app/",
+    "phpunit_xml": "app/",
     "root_folder": "/vagrant",
     "server_user": "vagrant",
     "server_address": "",

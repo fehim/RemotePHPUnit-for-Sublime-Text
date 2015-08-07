@@ -31,7 +31,8 @@ class RemotePhpUnitCommand(sublime_plugin.WindowCommand):
         self.ssh_key          = self.settings.get('ssh_key')
         self.server_user      = self.settings.get('server_user')
         self.server_address   = self.settings.get('server_address')
-        self.phpunit_xml_path = self.settings.get('phpunit_xml_path')
+        self.server_port      = self.settings.get('server_port')
+        self.phpunit_xml      = self.settings.get('phpunit_xml')
 
         if (str(self.phpunit_path) == ""):
             sublime.status_message("You have to set the phpunit_path in the RemotePHPUnit configuration")
@@ -41,35 +42,26 @@ class RemotePhpUnitCommand(sublime_plugin.WindowCommand):
 
     def run(self, *args, **kwargs):
         try:
-            # The first folder needs to be the Laravel Project
             self.PROJECT_PATH = self.window.folders()[0] + "/"
 
-            if self.phpunit_xml_path:
-                self.CONFIG_PATH = self.PROJECT_PATH + self.phpunit_xml_path
-            else:
-                self.CONFIG_PATH = self.PROJECT_PATH
+            self.params = kwargs.get('params', False)
+            self.type = kwargs.get('type', False)
+            self.group = ""
+            self.filename = ""
 
-            if os.path.isfile("%s" % os.path.join(self.CONFIG_PATH, 'phpunit.xml')) or os.path.isfile("%s" % os.path.join(self.CONFIG_PATH, 'phpunit.xml.dist')):
-                self.params = kwargs.get('params', False)
-                self.type = kwargs.get('type', False)
-                self.group = ""
-                self.filename = ""
+            if self.type == "unit":
+                self.group = " --exclude-group functional_test"
+            elif self.type == "functional":
+                self.group = " --group functional_test"
+            elif self.type == "current_file":
+                self.filename = self.file_name()
+                if not os.path.isfile(self.filename):
+                    sublime.status_message("file " + self.filename + " not found")
+                    return False
+                else:
+                    self.filename = self.filename[len(self.PROJECT_PATH):]
 
-                if self.type == "unit":
-                    self.group = " --exclude-group functional_test"
-                elif self.type == "functional":
-                    self.group = " --group functional_test"
-                elif self.type == "current_file":
-                    self.filename = self.file_name()
-                    if not os.path.isfile(self.filename):
-                        sublime.status_message("file " + self.filename + " not found")
-                        return False
-                    else:
-                        self.filename = self.filename[len(self.PROJECT_PATH):]
-
-                self.on_done()
-            else:
-                sublime.status_message("phpunit.xml or phpunit.xml.dist not found")
+            self.on_done()
         except IndexError:
             sublime.status_message("Please open a project with PHPUnit")
 
@@ -105,17 +97,20 @@ class RemotePhpUnitCommand(sublime_plugin.WindowCommand):
         # add server address
         command += self.server_address
 
-        command += " '"
+        command += " "
+
+        if (self.server_port):
+            command += "-p " + self.server_port
 
         if (self.root_folder):
-            command += "cd /" + self.root_folder + "; "
+            command += " ' cd /" + self.root_folder + "; "
 
         # set the php_unit path and group
         command += self.phpunit_path + self.group
 
         # set the xml configuration path if configured
-        if (self.phpunit_xml_path):
-            command += " -c " + self.phpunit_xml_path
+        if (self.phpunit_xml):
+            command += " -c " + self.phpunit_xml
 
         # set file name if set
         if (self.filename):
